@@ -1,0 +1,151 @@
+{
+  "project_name": "FounderFund",
+  "design_philosophy": {
+    "theme": "Old Money Glass",
+    "mood": "Quiet Luxury, Institutional Trust, Dark & Mysterious",
+    "core_concept": "Infrastructure for Capital",
+    "visual_style": "Dark Mode Only + Gold Accents + Glassmorphism"
+  },
+  "typography": {
+    "font_family": {
+      "heading": "Playfair Display, serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-5xl md:text-7xl font-medium tracking-tight leading-[1.1]",
+      "h2": "text-4xl md:text-5xl font-normal tracking-tight",
+      "h3": "text-2xl md:text-3xl font-normal",
+      "body": "text-base md:text-lg leading-relaxed text-white/80",
+      "caption": "text-sm tracking-widest uppercase text-gold/60"
+    },
+    "imports": [
+      "@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "background": "#050505",
+      "surface": "#0A0A0A",
+      "surface_highlight": "#141414",
+      "primary": "#D4AF37",
+      "primary_hover": "#C5A028",
+      "text_main": "#F5F5F5",
+      "text_muted": "#A3A3A3",
+      "border_subtle": "rgba(255, 255, 255, 0.08)",
+      "border_accent": "rgba(212, 175, 55, 0.3)"
+    },
+    "tailwind_config": {
+      "extend": {
+        "colors": {
+          "obsidian": "#050505",
+          "charcoal": "#0A0A0A",
+          "gold": {
+            "DEFAULT": "#D4AF37",
+            "dim": "#8A7E50",
+            "glow": "#FFD700"
+          }
+        }
+      }
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": {
+      "default": "bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl",
+      "active": "bg-black/60 backdrop-blur-2xl border border-gold/20 shadow-[0_0_30px_-10px_rgba(212,175,55,0.15)]"
+    },
+    "gradients": {
+      "gold_glow": "radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%)",
+      "dark_fade": "linear-gradient(to bottom, transparent, #050505)"
+    },
+    "borders": {
+      "shine": "border border-white/10 hover:border-gold/30 transition-colors duration-500"
+    }
+  },
+  "layout": {
+    "container": "max-w-7xl mx-auto px-6 md:px-12",
+    "spacing": {
+      "section_gap": "py-24 md:py-32",
+      "element_gap": "gap-8 md:gap-12"
+    },
+    "grid_system": "grid grid-cols-1 md:grid-cols-12 gap-6"
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-gold text-obsidian font-semibold px-8 py-4 rounded-none hover:bg-white transition-all duration-300 tracking-wide uppercase text-sm",
+      "secondary": "bg-transparent border border-white/20 text-white px-8 py-4 rounded-none hover:border-gold hover:text-gold transition-all duration-300 tracking-wide uppercase text-sm",
+      "ghost": "text-white/60 hover:text-gold transition-colors uppercase tracking-widest text-xs"
+    },
+    "cards": {
+      "feature": "group relative p-8 bg-white/5 border border-white/5 hover:border-gold/20 transition-all duration-500 overflow-hidden",
+      "pricing": "p-10 bg-gradient-to-b from-white/5 to-transparent border border-white/10"
+    },
+    "inputs": {
+      "default": "bg-white/5 border-b border-white/20 text-white placeholder:text-white/30 focus:border-gold focus:ring-0 rounded-none px-0 py-4 transition-all"
+    }
+  },
+  "media": {
+    "images": {
+      "hero_bg_texture": "https://images.unsplash.com/photo-1647101734210-ff5d79813069?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "investor_handshake": "https://images.unsplash.com/photo-1752159684779-0639174cdfac?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "abstract_gold": "https://images.unsplash.com/photo-1767089261456-1de8dc10e765?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "3d_assets": {
+      "library": "react-three-fiber",
+      "concept": "Floating, rotating Gold Card or Abstract Currency Bill",
+      "fallback": "Use a high-quality 3D rendered image of a gold card if R3F implementation is too complex for MVP"
+    }
+  },
+  "sections": {
+    "hero": {
+      "layout": "Centered text with 3D element floating behind or to the side",
+      "elements": ["H1 Headline", "Subheadline", "Dual CTA (Primary: Apply, Secondary: Learn More)", "3D Background"]
+    },
+    "problem": {
+      "layout": "Horizontal scroll or Grid of 'Pain Cards'",
+      "style": "Darkest background, high contrast text"
+    },
+    "solution": {
+      "layout": "3-Step Linear Process",
+      "style": "Minimalist icons, connecting lines (gold)"
+    },
+    "audience": {
+      "layout": "Split screen (Founders Left, Investors Right)",
+      "style": "Interactive hover states revealing details"
+    },
+    "early_access": {
+      "layout": "Central Form",
+      "style": "Premium 'Application' feel, not just a newsletter signup. Use 'Input' styles defined above."
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. SETUP: Install 'lucide-react' for icons, 'framer-motion' for animations, and 'three' + '@react-three/fiber' + '@react-three/drei' for 3D.",
+    "2. TAILWIND: Update tailwind.config.js with the 'obsidian', 'charcoal', and 'gold' colors immediately.",
+    "3. FONTS: Add the Google Fonts import to index.css.",
+    "4. 3D HERO: Create a 'CurrencyCanvas' component. If a complex model isn't available, create a procedural 'Gold Card' using R3F primitives (BoxGeometry) with a gold material (MeshStandardMaterial with high metalness/roughness).",
+    "5. FORM: Build the research form with distinct steps or a clean vertical layout. It must feel like a legal document or an exclusive application.",
+    "6. ANIMATION: Use Framer Motion for text reveals (staggered fade-up). The 3D element should rotate slowly on scroll.",
+    "7. GLASSMORPHISM: Apply the glass classes to the Navbar and any floating cards.",
+    "8. IMAGES: Use the 'hero_bg_texture' as a subtle overlay (opacity 10-20%) in the background of the Hero or Credibility section."
+  ],
+  "universal_guidelines": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use sonner for toasts. Sonner component are located in /app/src/components/ui/sonner.tsx"
+  ]
+}
