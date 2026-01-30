@@ -1,10 +1,8 @@
-import { useRef, useMemo, useEffect, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useEffect, useState, useRef } from 'react';
 
-const CurrencyBill = () => {
-  const meshRef = useRef();
+export const CurrencyCanvas = ({ className = '' }) => {
   const [scrollY, setScrollY] = useState(0);
+  const containerRef = useRef(null);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -13,141 +11,130 @@ const CurrencyBill = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
-  // Currency bill texture
-  const texture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-    
-    // Dark green gradient background (like a bill)
-    const gradient = ctx.createLinearGradient(0, 0, 512, 256);
-    gradient.addColorStop(0, '#0a1f0a');
-    gradient.addColorStop(0.5, '#143314');
-    gradient.addColorStop(1, '#0a1f0a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 512, 256);
-    
-    // Add subtle pattern
-    ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < 512; i += 8) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, 256);
-      ctx.stroke();
-    }
-    for (let i = 0; i < 256; i += 8) {
-      ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(512, i);
-      ctx.stroke();
-    }
-    
-    // Gold border
-    ctx.strokeStyle = '#D4AF37';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(10, 10, 492, 236);
-    
-    // Inner border
-    ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(20, 20, 472, 216);
-    
-    // Main symbol (centered)
-    ctx.font = 'bold 100px serif';
-    ctx.fillStyle = '#D4AF37';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('FF', 256, 128);
-    
-    // Small currency symbols in corners
-    ctx.font = 'bold 24px serif';
-    ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
-    ctx.fillText('$', 50, 50);
-    ctx.fillText('€', 462, 50);
-    ctx.fillText('£', 50, 206);
-    ctx.fillText('¥', 462, 206);
-    
-    // Decorative text
-    ctx.font = '12px sans-serif';
-    ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
-    ctx.fillText('FOUNDER FUND', 256, 220);
-    
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.needsUpdate = true;
-    return tex;
-  }, []);
 
-  useFrame((state) => {
-    if (meshRef.current) {
-      const time = state.clock.elapsedTime;
-      // Gentle rotation based on time and scroll
-      meshRef.current.rotation.y = Math.sin(time * 0.3) * 0.3 + scrollY * 0.0005;
-      meshRef.current.rotation.x = Math.cos(time * 0.2) * 0.1;
-      meshRef.current.rotation.z = Math.sin(time * 0.1) * 0.05;
-      // Gentle floating motion
-      meshRef.current.position.y = Math.sin(time * 0.5) * 0.15;
-    }
-  });
+  // Calculate rotation based on scroll
+  const rotateY = (scrollY * 0.05) % 360;
+  const rotateX = Math.sin(scrollY * 0.002) * 10;
 
   return (
-    <group ref={meshRef}>
-      <mesh scale={[2.5, 1.25, 0.02]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          map={texture}
-          metalness={0.3}
-          roughness={0.7}
-        />
-      </mesh>
-      {/* Glow effect */}
-      <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
-        <planeGeometry />
-        <meshBasicMaterial 
-          color="#D4AF37" 
-          transparent 
-          opacity={0.05}
-        />
-      </mesh>
-    </group>
-  );
-};
-
-const Scene = () => {
-  return (
-    <>
-      <ambientLight intensity={0.4} />
-      <pointLight position={[10, 10, 10]} intensity={0.6} color="#D4AF37" />
-      <pointLight position={[-10, -10, -10]} intensity={0.3} color="#ffffff" />
-      <spotLight
-        position={[0, 5, 5]}
-        angle={0.3}
-        penumbra={1}
-        intensity={0.5}
-        color="#D4AF37"
-      />
-      <CurrencyBill />
-    </>
-  );
-};
-
-export const CurrencyCanvas = ({ className = '' }) => {
-  return (
-    <div className={`absolute inset-0 pointer-events-none ${className}`}>
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        dpr={[1, 1.5]}
-        gl={{ 
-          antialias: true, 
-          alpha: true,
-          powerPreference: 'high-performance'
+    <div 
+      ref={containerRef}
+      className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
+      style={{ perspective: '1000px' }}
+    >
+      {/* Ambient glow */}
+      <div 
+        className="absolute top-1/2 left-1/2 w-[600px] h-[400px] -translate-x-1/2 -translate-y-1/2"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(212, 175, 55, 0.08) 0%, transparent 70%)',
+          filter: 'blur(40px)',
         }}
-        style={{ background: 'transparent' }}
+      />
+      
+      {/* 3D Currency Bill */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: `
+            rotateY(${rotateY + 15}deg) 
+            rotateX(${rotateX}deg) 
+            translateZ(50px)
+          `,
+          animation: 'float 6s ease-in-out infinite',
+        }}
       >
-        <Scene />
-      </Canvas>
+        {/* Bill front face */}
+        <div 
+          className="relative w-[400px] h-[200px] rounded-sm overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #0a1f0a 0%, #143314 50%, #0a1f0a 100%)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 60px -20px rgba(212, 175, 55, 0.2)',
+            border: '3px solid #D4AF37',
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          {/* Pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `
+                linear-gradient(90deg, rgba(212, 175, 55, 0.3) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(212, 175, 55, 0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: '15px 15px',
+            }}
+          />
+          
+          {/* Inner border */}
+          <div 
+            className="absolute inset-3 border border-gold/30 rounded-sm"
+          />
+          
+          {/* Currency symbols in corners */}
+          <div className="absolute top-4 left-4 text-gold/50 font-serif text-2xl font-bold">$</div>
+          <div className="absolute top-4 right-4 text-gold/50 font-serif text-2xl font-bold">€</div>
+          <div className="absolute bottom-4 left-4 text-gold/50 font-serif text-2xl font-bold">£</div>
+          <div className="absolute bottom-4 right-4 text-gold/50 font-serif text-2xl font-bold">¥</div>
+          
+          {/* Center emblem */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div 
+                className="text-gold font-display text-6xl font-semibold tracking-tight"
+                style={{
+                  textShadow: '0 0 30px rgba(212, 175, 55, 0.5)',
+                }}
+              >
+                FF
+              </div>
+            </div>
+          </div>
+          
+          {/* Bottom text */}
+          <div className="absolute bottom-6 left-0 right-0 text-center">
+            <span className="text-gold/40 text-[10px] tracking-[0.3em] uppercase font-body">
+              Founder Fund
+            </span>
+          </div>
+          
+          {/* Shine effect */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)',
+              animation: 'shimmer 4s ease-in-out infinite',
+            }}
+          />
+        </div>
+      </div>
+      
+      {/* Floating particles */}
+      <div className="absolute inset-0">
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-gold/30 rounded-full"
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + (i % 3) * 20}%`,
+              animation: `float ${4 + i}s ease-in-out infinite`,
+              animationDelay: `${i * 0.5}s`,
+            }}
+          />
+        ))}
+      </div>
+      
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-20px) translateX(5px); }
+        }
+        @keyframes shimmer {
+          0%, 100% { opacity: 0.1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
     </div>
   );
 };
