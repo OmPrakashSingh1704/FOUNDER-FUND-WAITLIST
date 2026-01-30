@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   Search, FileText, BarChart3, Users, Building2, Briefcase,
   ArrowRight, ChevronDown, Sparkles, Target, TrendingUp,
-  MessageSquare, Layers, CircleDot
+  MessageSquare, Layers, CircleDot, UserCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,6 +36,54 @@ const staggerContainer = {
     opacity: 1,
     transition: { staggerChildren: 0.1, delayChildren: 0.2 }
   }
+};
+
+// Live Signup Counter Hook
+const useSignupCount = () => {
+  const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const response = await axios.get(`${API}/waitlist/stats`);
+        setCount(response.data.total_signups);
+      } catch (error) {
+        console.error('Failed to fetch signup count');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCount();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return { count, loading };
+};
+
+// Signup Counter Component
+const SignupCounter = () => {
+  const { count, loading } = useSignupCount();
+  
+  if (loading || count < 3) return null;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1, duration: 0.5 }}
+      className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full"
+      data-testid="signup-counter"
+    >
+      <UserCheck className="w-4 h-4 text-gold" />
+      <span className="text-white/80 text-sm font-body">
+        <span className="text-gold font-semibold">{count}</span> founders & investors already joined
+      </span>
+    </motion.div>
+  );
 };
 
 // Navbar Component
