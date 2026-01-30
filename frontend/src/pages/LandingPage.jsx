@@ -172,13 +172,18 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-white/70 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl font-body"
+            className="text-white/70 text-lg md:text-xl leading-relaxed mb-8 max-w-2xl font-body"
             data-testid="hero-subtext"
           >
             FounderFund helps founders discover relevant investors, apply faster, and track responses. 
             Investors discover aligned startups and manage inbound interest. 
             Funds reduce noise, duplication, and missed opportunities across deal flow.
           </motion.p>
+          
+          {/* Live Signup Counter */}
+          <div className="mb-8">
+            <SignupCounter />
+          </div>
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
