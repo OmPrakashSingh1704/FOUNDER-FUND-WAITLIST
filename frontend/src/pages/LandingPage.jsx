@@ -602,6 +602,7 @@ const EarlyAccessSection = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2"
                 >
                   <label className="form-label block">Investment Focus</label>
                   <Select
@@ -623,7 +624,7 @@ const EarlyAccessSection = () => {
               )}
               
               {/* Biggest Pain */}
-              <div>
+              <div className="space-y-2">
                 <label className="form-label block">Biggest pain in fundraising/deal flow *</label>
                 <Select
                   value={formData.biggestPain}
@@ -644,7 +645,7 @@ const EarlyAccessSection = () => {
               </div>
               
               {/* Detailed Pain (Optional) */}
-              <div>
+              <div className="space-y-2">
                 <label className="form-label block">Tell us more (optional)</label>
                 <Textarea
                   value={formData.detailedPain}
