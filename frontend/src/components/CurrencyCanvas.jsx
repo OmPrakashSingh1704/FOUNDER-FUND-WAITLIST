@@ -1,6 +1,5 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 const CurrencyBill = () => {
@@ -83,39 +82,36 @@ const CurrencyBill = () => {
 
   useFrame((state) => {
     if (meshRef.current) {
+      const time = state.clock.elapsedTime;
       // Gentle rotation based on time and scroll
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2 + scrollY * 0.0005;
-      meshRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.2) * 0.1;
-      meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.1) * 0.05;
+      meshRef.current.rotation.y = Math.sin(time * 0.3) * 0.3 + scrollY * 0.0005;
+      meshRef.current.rotation.x = Math.cos(time * 0.2) * 0.1;
+      meshRef.current.rotation.z = Math.sin(time * 0.1) * 0.05;
+      // Gentle floating motion
+      meshRef.current.position.y = Math.sin(time * 0.5) * 0.15;
     }
   });
 
   return (
-    <Float
-      speed={1.5}
-      rotationIntensity={0.2}
-      floatIntensity={0.4}
-    >
-      <group ref={meshRef}>
-        <mesh scale={[2.5, 1.25, 0.02]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial
-            map={texture}
-            metalness={0.3}
-            roughness={0.7}
-          />
-        </mesh>
-        {/* Glow effect */}
-        <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
-          <planeGeometry />
-          <meshBasicMaterial 
-            color="#D4AF37" 
-            transparent 
-            opacity={0.05}
-          />
-        </mesh>
-      </group>
-    </Float>
+    <group ref={meshRef}>
+      <mesh scale={[2.5, 1.25, 0.02]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          map={texture}
+          metalness={0.3}
+          roughness={0.7}
+        />
+      </mesh>
+      {/* Glow effect */}
+      <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
+        <planeGeometry />
+        <meshBasicMaterial 
+          color="#D4AF37" 
+          transparent 
+          opacity={0.05}
+        />
+      </mesh>
+    </group>
   );
 };
 
