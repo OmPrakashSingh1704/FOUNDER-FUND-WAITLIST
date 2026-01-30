@@ -533,11 +533,11 @@ const EarlyAccessSection = () => {
             <motion.form
               variants={fadeInUp}
               onSubmit={handleSubmit}
-              className="glass-active p-8 md:p-12 space-y-8"
+              className="glass-active p-8 md:p-12 space-y-10"
               data-testid="waitlist-form"
             >
               {/* Email */}
-              <div>
+              <div className="space-y-2">
                 <label className="form-label block">Email *</label>
                 <Input
                   type="email"
@@ -551,7 +551,7 @@ const EarlyAccessSection = () => {
               </div>
               
               {/* Role */}
-              <div>
+              <div className="space-y-2">
                 <label className="form-label block">I am a *</label>
                 <Select
                   value={formData.role}
@@ -575,6 +575,7 @@ const EarlyAccessSection = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2"
                 >
                   <label className="form-label block">Startup Stage</label>
                   <Select
