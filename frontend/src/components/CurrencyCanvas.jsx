@@ -109,8 +109,36 @@ export const CurrencyCanvas = ({ className = '' }) => {
         </div>
       </div>
       
-      {/* Floating particles */}
-      <div className="absolute inset-0">
+      {/* Mobile version - simpler, smaller */}
+      <div 
+        className="absolute top-1/2 right-4 -translate-y-1/2 md:hidden"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: `rotateY(${rotateY * 0.3 + 10}deg)`,
+          animation: 'float 6s ease-in-out infinite',
+        }}
+      >
+        <div 
+          className="relative w-[120px] h-[60px] rounded-sm overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #0a1f0a 0%, #143314 50%, #0a1f0a 100%)',
+            boxShadow: '0 10px 30px -8px rgba(0, 0, 0, 0.5), 0 0 30px -10px rgba(212, 175, 55, 0.2)',
+            border: '2px solid #D4AF37',
+          }}
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div 
+              className="text-gold font-display text-2xl font-semibold"
+              style={{ textShadow: '0 0 20px rgba(212, 175, 55, 0.5)' }}
+            >
+              FF
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Floating particles - hidden on mobile */}
+      <div className="absolute inset-0 hidden md:block">
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
