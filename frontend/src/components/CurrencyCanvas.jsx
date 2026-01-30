@@ -1,15 +1,21 @@
-import { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Environment, MeshTransmissionMaterial } from '@react-three/drei';
+import { useRef, useMemo, useEffect, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 
-const CurrencyBill = ({ scrollY = 0 }) => {
+const CurrencyBill = () => {
   const meshRef = useRef();
-  const materialRef = useRef();
+  const [scrollY, setScrollY] = useState(0);
   
-  // Currency symbols for texture
-  const currencies = ['$', '€', '£', '¥', '₹', '₿'];
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
+  // Currency bill texture
   const texture = useMemo(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
@@ -66,7 +72,7 @@ const CurrencyBill = ({ scrollY = 0 }) => {
     ctx.fillText('¥', 462, 206);
     
     // Decorative text
-    ctx.font = '12px Manrope, sans-serif';
+    ctx.font = '12px sans-serif';
     ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
     ctx.fillText('FOUNDER FUND', 256, 220);
     
@@ -78,7 +84,7 @@ const CurrencyBill = ({ scrollY = 0 }) => {
   useFrame((state) => {
     if (meshRef.current) {
       // Gentle rotation based on time and scroll
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2 + scrollY * 0.001;
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2 + scrollY * 0.0005;
       meshRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.2) * 0.1;
       meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.1) * 0.05;
     }
@@ -87,37 +93,37 @@ const CurrencyBill = ({ scrollY = 0 }) => {
   return (
     <Float
       speed={1.5}
-      rotationIntensity={0.3}
-      floatIntensity={0.5}
+      rotationIntensity={0.2}
+      floatIntensity={0.4}
     >
-      <mesh ref={meshRef} scale={[2.5, 1.25, 0.02]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          ref={materialRef}
-          map={texture}
-          metalness={0.3}
-          roughness={0.7}
-          envMapIntensity={0.5}
-        />
-      </mesh>
-      {/* Glow effect */}
-      <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
-        <planeGeometry />
-        <meshBasicMaterial 
-          color="#D4AF37" 
-          transparent 
-          opacity={0.05}
-        />
-      </mesh>
+      <group ref={meshRef}>
+        <mesh scale={[2.5, 1.25, 0.02]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial
+            map={texture}
+            metalness={0.3}
+            roughness={0.7}
+          />
+        </mesh>
+        {/* Glow effect */}
+        <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
+          <planeGeometry />
+          <meshBasicMaterial 
+            color="#D4AF37" 
+            transparent 
+            opacity={0.05}
+          />
+        </mesh>
+      </group>
     </Float>
   );
 };
 
-const Scene = ({ scrollY }) => {
+const Scene = () => {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} color="#D4AF37" />
+      <ambientLight intensity={0.4} />
+      <pointLight position={[10, 10, 10]} intensity={0.6} color="#D4AF37" />
       <pointLight position={[-10, -10, -10]} intensity={0.3} color="#ffffff" />
       <spotLight
         position={[0, 5, 5]}
@@ -126,24 +132,12 @@ const Scene = ({ scrollY }) => {
         intensity={0.5}
         color="#D4AF37"
       />
-      <CurrencyBill scrollY={scrollY} />
-      <Environment preset="city" />
+      <CurrencyBill />
     </>
   );
 };
 
 export const CurrencyCanvas = ({ className = '' }) => {
-  const scrollY = useRef(0);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      scrollY.current = window.scrollY;
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <div className={`absolute inset-0 pointer-events-none ${className}`}>
       <Canvas
@@ -156,7 +150,7 @@ export const CurrencyCanvas = ({ className = '' }) => {
         }}
         style={{ background: 'transparent' }}
       >
-        <Scene scrollY={scrollY.current} />
+        <Scene />
       </Canvas>
     </div>
   );
