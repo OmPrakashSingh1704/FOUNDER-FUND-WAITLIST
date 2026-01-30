@@ -1,0 +1,165 @@
+import { useRef, useMemo, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Float, Environment, MeshTransmissionMaterial } from '@react-three/drei';
+import * as THREE from 'three';
+
+const CurrencyBill = ({ scrollY = 0 }) => {
+  const meshRef = useRef();
+  const materialRef = useRef();
+  
+  // Currency symbols for texture
+  const currencies = ['$', '€', '£', '¥', '₹', '₿'];
+  
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    
+    // Dark green gradient background (like a bill)
+    const gradient = ctx.createLinearGradient(0, 0, 512, 256);
+    gradient.addColorStop(0, '#0a1f0a');
+    gradient.addColorStop(0.5, '#143314');
+    gradient.addColorStop(1, '#0a1f0a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 512, 256);
+    
+    // Add subtle pattern
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < 512; i += 8) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, 256);
+      ctx.stroke();
+    }
+    for (let i = 0; i < 256; i += 8) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(512, i);
+      ctx.stroke();
+    }
+    
+    // Gold border
+    ctx.strokeStyle = '#D4AF37';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(10, 10, 492, 236);
+    
+    // Inner border
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(20, 20, 472, 216);
+    
+    // Main symbol (centered)
+    ctx.font = 'bold 100px serif';
+    ctx.fillStyle = '#D4AF37';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('FF', 256, 128);
+    
+    // Small currency symbols in corners
+    ctx.font = 'bold 24px serif';
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
+    ctx.fillText('$', 50, 50);
+    ctx.fillText('€', 462, 50);
+    ctx.fillText('£', 50, 206);
+    ctx.fillText('¥', 462, 206);
+    
+    // Decorative text
+    ctx.font = '12px Manrope, sans-serif';
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
+    ctx.fillText('FOUNDER FUND', 256, 220);
+    
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+    return tex;
+  }, []);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      // Gentle rotation based on time and scroll
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2 + scrollY * 0.001;
+      meshRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.2) * 0.1;
+      meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.1) * 0.05;
+    }
+  });
+
+  return (
+    <Float
+      speed={1.5}
+      rotationIntensity={0.3}
+      floatIntensity={0.5}
+    >
+      <mesh ref={meshRef} scale={[2.5, 1.25, 0.02]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          ref={materialRef}
+          map={texture}
+          metalness={0.3}
+          roughness={0.7}
+          envMapIntensity={0.5}
+        />
+      </mesh>
+      {/* Glow effect */}
+      <mesh scale={[2.6, 1.35, 0.01]} position={[0, 0, -0.02]}>
+        <planeGeometry />
+        <meshBasicMaterial 
+          color="#D4AF37" 
+          transparent 
+          opacity={0.05}
+        />
+      </mesh>
+    </Float>
+  );
+};
+
+const Scene = ({ scrollY }) => {
+  return (
+    <>
+      <ambientLight intensity={0.3} />
+      <pointLight position={[10, 10, 10]} intensity={0.5} color="#D4AF37" />
+      <pointLight position={[-10, -10, -10]} intensity={0.3} color="#ffffff" />
+      <spotLight
+        position={[0, 5, 5]}
+        angle={0.3}
+        penumbra={1}
+        intensity={0.5}
+        color="#D4AF37"
+      />
+      <CurrencyBill scrollY={scrollY} />
+      <Environment preset="city" />
+    </>
+  );
+};
+
+export const CurrencyCanvas = ({ className = '' }) => {
+  const scrollY = useRef(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollY.current = window.scrollY;
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className={`absolute inset-0 pointer-events-none ${className}`}>
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        dpr={[1, 1.5]}
+        gl={{ 
+          antialias: true, 
+          alpha: true,
+          powerPreference: 'high-performance'
+        }}
+        style={{ background: 'transparent' }}
+      >
+        <Scene scrollY={scrollY.current} />
+      </Canvas>
+    </div>
+  );
+};
+
+export default CurrencyCanvas;

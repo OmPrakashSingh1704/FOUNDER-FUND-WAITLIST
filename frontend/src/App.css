@@ -1,34 +1,171 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* FounderFund Landing Page Styles */
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Hero background texture overlay */
+.hero-bg-overlay {
+  background-image: url('https://images.unsplash.com/photo-1647101734210-ff5d79813069?crop=entropy&cs=srgb&fm=jpg&q=85');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* Gold accent line */
+.gold-accent-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
 }
 
-.App-link {
-    color: #61dafb;
+/* Glass card hover effect */
+.glass-card {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.2);
+  box-shadow: 0 0 40px -15px rgba(212, 175, 55, 0.15);
+}
+
+/* Button styles */
+.btn-primary {
+  background: #D4AF37;
+  color: #050505;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+}
+
+.btn-primary:hover {
+  background: #F5F5F5;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #F5F5F5;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+}
+
+.btn-secondary:hover {
+  border-color: #D4AF37;
+  color: #D4AF37;
+}
+
+/* Form input styles */
+.form-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #F5F5F5;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.form-input:focus {
+  border-bottom-color: #D4AF37;
+  outline: none;
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+}
+
+/* Stagger animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Pain card styles */
+.pain-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+}
+
+.pain-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(212, 175, 55, 0.15);
+}
+
+/* Step connector line */
+.step-connector {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #D4AF37, rgba(212, 175, 55, 0.2));
+}
+
+/* Audience card */
+.audience-card {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.audience-card:hover {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+/* Form label animation */
+.form-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* Gold shimmer effect */
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Responsive container */
+.container-custom {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container-custom {
+    padding: 0 3rem;
+  }
+}
+
+/* Navbar glass effect */
+.navbar-glass {
+  background: rgba(5, 5, 5, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
