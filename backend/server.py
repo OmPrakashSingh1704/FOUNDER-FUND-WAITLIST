@@ -34,6 +34,27 @@ async def lifespan(app: FastAPI):
 # Create the main app with lifespan
 app = FastAPI(title="FounderFund API", version="1.0.0", lifespan=lifespan)
 
+# CORS configuration - must be added before routes
+cors_origins = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins == '*':
+    # Allow all origins without credentials
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    # Specific origins with credentials
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins.split(','),
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
@@ -196,14 +217,6 @@ async def get_waitlist_stats():
 
 # Include the router in the main app
 app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configure logging
 logging.basicConfig(
