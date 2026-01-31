@@ -10,6 +10,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import hashlib
+from fastapi.exceptions import Lifespan
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -200,6 +201,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+
+@Lifespan(app)
+async def app_lifespan(app):
+    yield
+    client.close()  # Gracefully close MongoDB connection during shutdown
